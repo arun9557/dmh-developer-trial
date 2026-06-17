@@ -881,7 +881,7 @@ const ResumeBuild = () => {
     <div className="h-full flex flex-col bg-transparent">
       {/* Sidebar scrollable content */}
       <div
-        className="flex-1 overflow-y-auto"
+        className="flex-1 min-h-0 overflow-y-auto"
         style={{
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(255,255,255,0.2) transparent'
@@ -987,7 +987,7 @@ const ResumeBuild = () => {
 
       {/* Preview Canvas */}
       <div
-        className="flex-1 overflow-auto p-6"
+        className="flex-1 min-h-0 overflow-auto p-6"
         style={{
           scrollbarWidth: 'thin',
           scrollbarColor: 'rgba(255,255,255,0.2) transparent'
