@@ -27,7 +27,6 @@ const Preview = () => {
   const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
-    // Try loading from individual key first
     let data = null
     try {
       const individual = localStorage.getItem(`resume_${resumeId}`)
@@ -38,7 +37,6 @@ const Preview = () => {
       // ignore
     }
 
-    // Fallback: search in all_resumes array
     if (!data) {
       try {
         const allRaw = localStorage.getItem('all_resumes')
@@ -62,7 +60,6 @@ const Preview = () => {
     setLoading(false)
   }, [resumeId])
 
-  // Set page title to the resume owner's name
   useEffect(() => {
     if (resume?.personal_info?.full_name) {
       document.title = `${resume.personal_info.full_name} — Resume`
@@ -80,10 +77,10 @@ const Preview = () => {
 
   if (loading) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-slate-50'>
+      <div className='min-h-screen flex items-center justify-center liquid-bg'>
         <div className='flex flex-col items-center gap-3'>
-          <div className='w-10 h-10 border-3 border-yellow-500 border-t-transparent rounded-full animate-spin' />
-          <p className='text-sm text-slate-400'>Loading resume...</p>
+          <div className='w-10 h-10 border-3 border-[#6fa37a] border-t-transparent rounded-full animate-spin' />
+          <p className='text-sm text-[rgba(255,255,255,0.4)] font-mono'>Loading resume...</p>
         </div>
       </div>
     )
@@ -91,18 +88,18 @@ const Preview = () => {
 
   if (notFound) {
     return (
-      <div className='min-h-screen flex items-center justify-center bg-slate-50'>
-        <div className='text-center p-10'>
-          <div className='w-20 h-20 mx-auto mb-6 rounded-full bg-red-50 flex items-center justify-center'>
-            <span className='text-3xl'>📄</span>
+      <div className='min-h-screen flex items-center justify-center liquid-bg'>
+        <div className='text-center p-10 glass-soft rounded-[2rem] border border-[rgba(255,255,255,0.05)] shadow-2xl'>
+          <div className='w-20 h-20 mx-auto mb-6 rounded-2xl bg-[rgba(244,63,94,0.1)] border border-[rgba(244,63,94,0.2)] flex items-center justify-center'>
+            <span className='text-3xl opacity-80'>📄</span>
           </div>
-          <h1 className='text-2xl font-semibold text-slate-800 mb-2'>Resume not found</h1>
-          <p className='text-slate-400 mb-6 max-w-sm mx-auto'>
+          <h1 className='text-2xl font-bold text-white mb-2 font-grotesk tracking-wide'>Resume not found</h1>
+          <p className='text-[rgba(255,255,255,0.4)] mb-8 max-w-sm mx-auto font-sans leading-relaxed'>
             The resume you're looking for doesn't exist or may have been deleted.
           </p>
           <Link
             to='/app'
-            className='inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg transition-all duration-200'
+            className='inline-flex items-center gap-2 bg-gradient-to-r from-[#6fa37a] to-[#3f6b54] text-white px-7 py-3.5 rounded-xl font-bold font-grotesk tracking-wide shadow-lg shadow-[#3f6b54]/30 hover:scale-105 transition-all duration-200 border border-[rgba(255,255,255,0.15)]'
           >
             <ArrowLeft className='w-4 h-4' />
             Back to Dashboard
@@ -114,28 +111,28 @@ const Preview = () => {
 
   const templateKey = resume.template || 'classic'
   const TemplateComponent = templateMap[templateKey] || ClassicTemplate
-  const accentColor = resume.accent_color || '#F59E0B'
+  const accentColor = resume.accent_color || '#cd8a4b'
 
   return (
-    <div className='min-h-screen bg-slate-100'>
+    <div className='min-h-screen liquid-bg'>
       {/* Floating control bar — hidden during print */}
-      <div className='print:hidden sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/60 shadow-sm'>
-        <div className='max-w-[794px] mx-auto px-4 py-3 flex items-center justify-between'>
+      <div className='print:hidden sticky top-0 z-40 glass border-b border-[rgba(255,255,255,0.1)] shadow-sm'>
+        <div className='max-w-[794px] mx-auto px-4 py-4 flex items-center justify-between'>
           <Link
             to='/app'
-            className='flex items-center gap-2 text-sm text-slate-600 hover:text-slate-900 transition'
+            className='flex items-center gap-2 text-sm text-[rgba(255,255,255,0.7)] hover:text-white transition font-medium font-sans'
           >
             <ArrowLeft className='w-4 h-4' />
             <span className='hidden sm:inline'>Back to Dashboard</span>
           </Link>
 
-          <div className='flex items-center gap-3'>
-            <span className='hidden sm:inline-flex items-center text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full'>
+          <div className='flex items-center gap-4'>
+            <span className='hidden sm:inline-flex items-center text-[11px] font-bold font-mono text-[#cd8a4b] bg-[rgba(205,138,75,0.1)] border border-[rgba(205,138,75,0.3)] px-3 py-1.5 rounded-full uppercase tracking-wider'>
               {templateLabels[templateKey] || 'Classic'} Template
             </span>
             <button
               onClick={handlePrint}
-              className='inline-flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer'
+              className='inline-flex items-center gap-2 bg-gradient-to-r from-[#6fa37a] to-[#3f6b54] text-white px-5 py-2.5 rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(111,163,122,0.4)] transition-all duration-200 cursor-pointer border border-[rgba(255,255,255,0.2)] font-grotesk tracking-wide active:scale-95'
             >
               <Printer className='w-4 h-4' />
               Print / Save PDF
@@ -144,32 +141,12 @@ const Preview = () => {
         </div>
       </div>
 
-      {/* Resume content — A4 width centered */}
-      <div className='flex justify-center py-8 print:py-0'>
-        <div className='w-full max-w-[794px] bg-white shadow-xl print:shadow-none'>
+      {/* Resume content — A4 width centered. Background MUST be pure white for the resume rendering */}
+      <div className='flex justify-center py-10 print:py-0'>
+        <div className='w-full max-w-[794px] bg-white text-black shadow-2xl print:shadow-none min-h-[1123px] print-area border border-[rgba(255,255,255,0.1)] print:border-none'>
           <TemplateComponent data={resume} accentColor={accentColor} />
         </div>
       </div>
-
-      {/* Print-specific styles */}
-      <style>{`
-        @media print {
-          body {
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-          .print\\:hidden {
-            display: none !important;
-          }
-          .print\\:shadow-none {
-            box-shadow: none !important;
-          }
-          .print\\:py-0 {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-          }
-        }
-      `}</style>
     </div>
   )
 }

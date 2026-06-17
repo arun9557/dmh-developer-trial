@@ -19,7 +19,7 @@ const saveResumes = (resumes) => {
 }
 
 const Dashboard = () => {
-  const colors = ['#FCA5A5', '#BBF7D0', '#BFDBFE', '#FEF3C7', '#E9D5FF', '#FBCFE8']
+  const colors = ['#6fa37a', '#cd8a4b', '#3f6b54', '#a86930', '#86b696', '#df9e61']
   const navigate = useNavigate()
 
   const [allResumes, setAllResumes] = useState([])
@@ -35,7 +35,6 @@ const Dashboard = () => {
   const [dragActive, setDragActive] = useState(false)
   const [uploadError, setUploadError] = useState('')
 
-  // Initialize resumes from localStorage or seed with dummy data
   useEffect(() => {
     const stored = loadResumes()
     if (stored && stored.length > 0) {
@@ -43,14 +42,12 @@ const Dashboard = () => {
     } else {
       setAllResumes(dummyResumeData)
       saveResumes(dummyResumeData)
-      // Also save each individual resume
       dummyResumeData.forEach((r) => {
         localStorage.setItem(`resume_${r._id}`, JSON.stringify(r))
       })
     }
   }, [])
 
-  // Sync allResumes to localStorage whenever it changes (skip initial empty array)
   useEffect(() => {
     if (allResumes.length > 0) {
       saveResumes(allResumes)
@@ -61,14 +58,12 @@ const Dashboard = () => {
     e.preventDefault()
 
     if (editResumeId) {
-      // Rename existing resume
       setAllResumes((prev) => {
         const updated = prev.map((r) =>
           r._id === editResumeId
             ? { ...r, title: title || r.title, updatedAt: new Date().toISOString() }
             : r
         )
-        // Update individual key too
         const found = updated.find((r) => r._id === editResumeId)
         if (found) {
           localStorage.setItem(`resume_${editResumeId}`, JSON.stringify(found))
@@ -105,9 +100,7 @@ const Dashboard = () => {
       createdAt: new Date().toISOString()
     }
 
-    // Save individual resume to localStorage
     localStorage.setItem(`resume_${newResume._id}`, JSON.stringify(newResume))
-
     setAllResumes((prev) => [newResume, ...prev])
     setTitle('')
     setShowCreateResume(false)
@@ -121,7 +114,6 @@ const Dashboard = () => {
         saveResumes(filtered)
         return filtered
       })
-      // Remove individual key
       localStorage.removeItem(`resume_${resume._id}`)
     }
   }
@@ -137,7 +129,7 @@ const Dashboard = () => {
         setUploadTitle(parsed.title || parsed.personal_info?.full_name || '')
       }
     } catch {
-      // ignore parsing errors at preview stage
+      // ignore
     }
   }
 
@@ -185,7 +177,6 @@ const Dashboard = () => {
         return
       }
 
-      // Save each uploaded resume individually
       newItems.forEach((item) => {
         localStorage.setItem(`resume_${item._id}`, JSON.stringify(item))
       })
@@ -202,42 +193,48 @@ const Dashboard = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-amber-50/30'>
-      <div className='max-w-7xl mx-auto px-4 py-8'>
+    <div className='min-h-screen liquid-bg relative'>
+      <div className='max-w-7xl mx-auto px-4 py-12 relative z-10'>
 
         {/* Welcome glassmorphic card */}
-        <div className='mb-8 p-5 rounded-2xl bg-white/60 backdrop-blur-md border border-white/40 shadow-sm'>
-          <p className='text-sm text-slate-500'>Welcome back,</p>
-          <h1 className='text-2xl font-semibold bg-gradient-to-r from-yellow-700 via-amber-600 to-yellow-500 bg-clip-text text-transparent'>
+        <div className='mb-10 p-6 rounded-3xl glass border border-[rgba(205,138,75,0.2)] shadow-2xl relative overflow-hidden'>
+          <div className="absolute right-0 top-0 w-64 h-64 bg-[radial-gradient(ellipse_at_top_right,rgba(205,138,75,0.15)_0%,transparent_70%)] pointer-events-none"></div>
+          <p className='text-sm text-[rgba(255,255,255,0.6)] font-mono tracking-wide'>Welcome back,</p>
+          <h1 className='text-3xl font-bold text-mossamber font-grotesk tracking-tight mt-1'>
             Arun Pratap Singh
           </h1>
-          <p className='text-xs text-slate-400 mt-1'>b24bs2044@iitj.ac.in</p>
+          <p className='text-[13px] text-[rgba(255,255,255,0.4)] mt-2 font-mono'>b24bs2044@iitj.ac.in</p>
         </div>
 
         {/* Gradient heading */}
-        <h2 className='text-xl font-medium mb-6 bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent'>
+        <h2 className='text-xl font-bold mb-6 text-white font-grotesk tracking-wide'>
           My Resumes
         </h2>
 
         {/* Action buttons */}
-        <div className='flex gap-4 mb-6'>
+        <div className='flex flex-col sm:flex-row gap-5 mb-8'>
           <button
             onClick={() => setShowCreateResume(true)}
-            className='w-full bg-white sm:max-w-40 h-48 flex flex-col items-center justify-center rounded-xl gap-3 text-slate-600 border border-dashed border-slate-300 group hover:border-purple-500 hover:shadow-lg hover:bg-purple-50/30 transition-all duration-300 cursor-pointer'
+            className='w-full sm:max-w-[180px] h-48 flex flex-col items-center justify-center rounded-[1.25rem] gap-4 text-[rgba(255,255,255,0.7)] border border-dashed border-[rgba(111,163,122,0.4)] glass-soft group hover:border-[#6fa37a] hover:bg-[rgba(111,163,122,0.08)] hover:shadow-[0_0_20px_rgba(111,163,122,0.15)] transition-all duration-300 cursor-pointer'
           >
-            <Plus className='w-11 h-11 transition-all duration-300 p-2.5 bg-purple-600 text-white rounded-full group-hover:scale-110' />
-            <p className='text-sm font-medium'>Create Resume</p>
+            <div className='p-3 bg-[rgba(111,163,122,0.15)] rounded-full group-hover:bg-[#6fa37a] group-hover:scale-110 transition-all duration-300 border border-[rgba(111,163,122,0.3)]'>
+              <Plus className='w-8 h-8 text-[#6fa37a] group-hover:text-white transition-colors' />
+            </div>
+            <p className='text-[14px] font-bold font-grotesk tracking-wide text-white'>Create Resume</p>
           </button>
+          
           <button
             onClick={() => setShowUploadResume(true)}
-            className='w-full bg-white sm:max-w-40 h-48 flex flex-col items-center justify-center rounded-xl gap-3 text-slate-600 border border-dashed border-slate-300 group hover:border-green-500 hover:shadow-lg hover:bg-green-50/30 transition-all duration-300 cursor-pointer'
+            className='w-full sm:max-w-[180px] h-48 flex flex-col items-center justify-center rounded-[1.25rem] gap-4 text-[rgba(255,255,255,0.7)] border border-dashed border-[rgba(205,138,75,0.4)] glass-soft group hover:border-[#cd8a4b] hover:bg-[rgba(205,138,75,0.08)] hover:shadow-[0_0_20px_rgba(205,138,75,0.15)] transition-all duration-300 cursor-pointer'
           >
-            <UploadCloud className='w-11 h-11 transition-all duration-300 p-2.5 bg-green-600 text-white rounded-full group-hover:scale-110' />
-            <p className='text-sm font-medium'>Upload Resume</p>
+            <div className='p-3 bg-[rgba(205,138,75,0.15)] rounded-full group-hover:bg-[#cd8a4b] group-hover:scale-110 transition-all duration-300 border border-[rgba(205,138,75,0.3)]'>
+              <UploadCloud className='w-8 h-8 text-[#cd8a4b] group-hover:text-white transition-colors' />
+            </div>
+            <p className='text-[14px] font-bold font-grotesk tracking-wide text-white'>Upload JSON</p>
           </button>
         </div>
 
-        <hr className='border-slate-200 my-6' />
+        <div className='h-px w-full bg-[rgba(255,255,255,0.08)] my-8' />
 
         {/* Resume grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
@@ -251,31 +248,33 @@ const Dashboard = () => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') navigate(`/app/builder/${resume._id}`)
                 }}
-                className='relative group w-full bg-white h-48 flex flex-col items-start justify-between rounded-xl p-4 text-slate-700 border border-slate-200 hover:shadow-lg hover:border-yellow-400/50 transition-all duration-300 cursor-pointer'
+                className='relative group w-full h-48 flex flex-col items-start justify-between rounded-[1.25rem] p-5 border border-[rgba(255,255,255,0.1)] glass-soft hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] hover:border-[#6fa37a]/50 hover:bg-[rgba(255,255,255,0.05)] transition-all duration-300 cursor-pointer overflow-hidden'
               >
-                <div className='flex items-center gap-3 w-full'>
-                  <div className='p-2.5 rounded-full shrink-0' style={{ backgroundColor: baseColor }}>
-                    <FileText className='w-5 h-5 text-white' />
+                <div className='absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none' style={{ background: baseColor }}></div>
+                
+                <div className='flex items-center gap-4 w-full z-10'>
+                  <div className='p-3 rounded-2xl shrink-0 shadow-inner' style={{ backgroundColor: baseColor }}>
+                    <FileText className='w-6 h-6 text-[#0a0a1a]' />
                   </div>
                   <div className='flex-1 min-w-0'>
-                    <p className='text-sm font-semibold truncate' style={{ color: baseColor }}>
+                    <p className='text-[15px] font-bold truncate font-grotesk tracking-wide text-white'>
                       {resume.title}
                     </p>
-                    <p className='text-[11px] text-slate-400 mt-1'>
-                      Updated on {new Date(resume.updatedAt).toLocaleDateString()}
+                    <p className='text-[11px] text-[rgba(255,255,255,0.4)] mt-1 font-mono tracking-wide'>
+                      Updated {new Date(resume.updatedAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
 
                 {/* Actions */}
                 <div
-                  className='flex gap-2 self-end opacity-0 group-hover:opacity-100 transition-opacity duration-200'
+                  className='flex gap-2 self-end opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10'
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button
                     type='button'
                     aria-label='edit'
-                    className='p-1.5 rounded-lg text-slate-400 hover:text-purple-600 hover:bg-purple-50 transition'
+                    className='p-2 rounded-xl text-[rgba(255,255,255,0.6)] hover:text-white hover:bg-[rgba(111,163,122,0.3)] transition border border-transparent hover:border-[rgba(111,163,122,0.4)]'
                     onClick={() => {
                       setEditResumeId(resume._id)
                       setTitle(resume.title)
@@ -287,7 +286,7 @@ const Dashboard = () => {
                   <button
                     type='button'
                     aria-label='delete'
-                    className='p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition'
+                    className='p-2 rounded-xl text-[rgba(255,255,255,0.6)] hover:text-[#fb7185] hover:bg-[rgba(244,63,94,0.15)] transition border border-transparent hover:border-[rgba(244,63,94,0.3)]'
                     onClick={() => handleDelete(resume)}
                   >
                     <Trash2 className='w-4 h-4' />
@@ -299,22 +298,22 @@ const Dashboard = () => {
         </div>
 
         {allResumes.length === 0 && (
-          <div className='text-center py-20'>
-            <FileText className='w-16 h-16 text-slate-200 mx-auto mb-4' />
-            <p className='text-slate-400 text-lg'>No resumes yet</p>
-            <p className='text-slate-300 text-sm mt-1'>Create one or upload an existing resume to get started.</p>
+          <div className='text-center py-24 glass-soft rounded-[2rem] border border-[rgba(255,255,255,0.05)] mt-8'>
+            <FileText className='w-16 h-16 text-[rgba(255,255,255,0.15)] mx-auto mb-5' />
+            <p className='text-[rgba(255,255,255,0.8)] text-xl font-bold font-grotesk tracking-wide'>No resumes yet</p>
+            <p className='text-[rgba(255,255,255,0.4)] text-sm mt-2 font-sans'>Create one or upload an existing resume to get started.</p>
           </div>
         )}
       </div>
 
       {/* Create / Rename Resume Modal */}
       {showCreateResume && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
-          <div className='bg-white rounded-2xl p-6 w-full max-w-md relative shadow-2xl'>
+        <div className='fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a1a]/80 backdrop-blur-md px-4'>
+          <div className='glass rounded-[2rem] p-8 w-full max-w-md relative shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-[rgba(111,163,122,0.3)]'>
             <button
               aria-label='close'
               type='button'
-              className='absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition'
+              className='absolute top-5 right-5 text-[rgba(255,255,255,0.4)] hover:text-white transition bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] p-1.5 rounded-full'
               onClick={() => {
                 setShowCreateResume(false)
                 setTitle('')
@@ -323,26 +322,26 @@ const Dashboard = () => {
             >
               <X className='w-5 h-5' />
             </button>
-            <h2 className='text-lg font-semibold mb-1 text-slate-800'>
-              {editResumeId ? 'Rename Resume' : 'Create New Resume'}
+            <h2 className='text-2xl font-bold mb-2 text-white font-grotesk tracking-tight'>
+              {editResumeId ? 'Rename Resume' : 'New Resume'}
             </h2>
-            <p className='text-sm text-slate-400 mb-5'>
-              {editResumeId ? 'Enter a new title for your resume.' : 'Give your resume a title to get started.'}
+            <p className='text-sm text-[rgba(255,255,255,0.5)] mb-6 font-sans'>
+              {editResumeId ? 'Enter a new title for your resume.' : 'Give your resume a professional title.'}
             </p>
             <form onSubmit={handleCreate}>
               <input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 type='text'
-                placeholder='Resume Title'
+                placeholder='e.g., Senior Developer Resume'
                 autoFocus
-                className='w-full px-4 py-2.5 mb-4 border border-slate-200 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition'
+                className='tool-input w-full px-5 py-3.5 mb-6 rounded-xl font-medium'
               />
               <button
                 type='submit'
-                className='w-full bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white font-medium px-4 py-2.5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer'
+                className='w-full bg-gradient-to-r from-[#6fa37a] to-[#3f6b54] hover:from-[#86b696] hover:to-[#6fa37a] text-white font-bold font-grotesk text-[15px] tracking-wide px-4 py-3.5 rounded-xl transition-all duration-200 shadow-lg shadow-[#3f6b54]/30 active:scale-95 border border-[rgba(255,255,255,0.1)]'
               >
-                {editResumeId ? 'Rename Resume' : 'Create Resume'}
+                {editResumeId ? 'Save Changes' : 'Create Resume'}
               </button>
             </form>
           </div>
@@ -351,12 +350,12 @@ const Dashboard = () => {
 
       {/* Upload Resume Modal */}
       {showUploadResume && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
-          <div className='bg-white rounded-2xl p-6 w-full max-w-md relative shadow-2xl'>
+        <div className='fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a1a]/80 backdrop-blur-md px-4'>
+          <div className='glass rounded-[2rem] p-8 w-full max-w-md relative shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-[rgba(205,138,75,0.3)]'>
             <button
               aria-label='close'
               type='button'
-              className='absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition'
+              className='absolute top-5 right-5 text-[rgba(255,255,255,0.4)] hover:text-white transition bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] p-1.5 rounded-full'
               onClick={() => {
                 setShowUploadResume(false)
                 setUploadFile(null)
@@ -367,8 +366,8 @@ const Dashboard = () => {
             >
               <X className='w-5 h-5' />
             </button>
-            <h2 className='text-lg font-semibold mb-1 text-slate-800'>Upload Resume</h2>
-            <p className='text-sm text-slate-400 mb-5'>Import a JSON resume file.</p>
+            <h2 className='text-2xl font-bold mb-2 text-white font-grotesk tracking-tight'>Upload JSON</h2>
+            <p className='text-sm text-[rgba(255,255,255,0.5)] mb-6 font-sans'>Import a previously exported JSON resume.</p>
 
             <input
               id='uploadFileInput'
@@ -383,7 +382,7 @@ const Dashboard = () => {
               onChange={(e) => setUploadTitle(e.target.value)}
               type='text'
               placeholder='Enter resume title (optional)'
-              className='w-full px-4 py-2.5 mb-4 border border-slate-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20 transition'
+              className='tool-input w-full px-5 py-3.5 mb-5 rounded-xl font-medium'
             />
 
             <label
@@ -391,53 +390,40 @@ const Dashboard = () => {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
-              className={`block border-2 rounded-xl p-8 mb-4 cursor-pointer transition-all duration-200 ${
+              className={`block border-2 rounded-[1.5rem] p-8 mb-5 cursor-pointer transition-all duration-300 ${
                 dragActive
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-dashed border-slate-300 hover:border-green-400 hover:bg-green-50/30'
+                  ? 'border-[#cd8a4b] bg-[rgba(205,138,75,0.1)]'
+                  : 'border-dashed border-[rgba(255,255,255,0.2)] hover:border-[#cd8a4b] hover:bg-[rgba(205,138,75,0.05)]'
               } text-center`}
             >
               <div className='flex flex-col items-center justify-center'>
-                <div className='p-4 rounded-full bg-green-50 mb-3'>
-                  <UploadCloud className='w-10 h-10 text-green-600' />
+                <div className='p-4 rounded-2xl bg-[rgba(205,138,75,0.15)] mb-4 border border-[rgba(205,138,75,0.2)]'>
+                  <UploadCloud className='w-8 h-8 text-[#cd8a4b]' />
                 </div>
-                <p className='text-sm text-slate-600 font-medium'>
+                <p className='text-[15px] text-[rgba(255,255,255,0.9)] font-bold font-grotesk tracking-wide'>
                   {uploadFileName || 'Select resume file'}
                 </p>
-                <p className='text-xs text-slate-400 mt-2'>
-                  Upload a JSON resume file or drag it here
+                <p className='text-xs text-[rgba(255,255,255,0.4)] mt-2 font-mono'>
+                  Upload a JSON file or drag it here
                 </p>
               </div>
             </label>
 
             {uploadError && (
-              <p className='text-sm text-red-500 mb-3 bg-red-50 px-3 py-2 rounded-lg'>{uploadError}</p>
+              <p className='text-[13px] text-[#fb7185] mb-5 bg-[rgba(244,63,94,0.1)] border border-[rgba(244,63,94,0.2)] px-4 py-3 rounded-xl font-medium'>{uploadError}</p>
             )}
 
             <div className='flex gap-3'>
               <button
                 disabled={!uploadFile}
                 onClick={handleUploadSubmit}
-                className={`flex-1 font-medium px-4 py-2.5 rounded-xl transition-all duration-200 cursor-pointer ${
+                className={`flex-1 font-bold font-grotesk tracking-wide text-[15px] px-4 py-3.5 rounded-xl transition-all duration-200 cursor-pointer border ${
                   uploadFile
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-sm hover:shadow-md'
-                    : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                    ? 'bg-gradient-to-r from-[#cd8a4b] to-[#a86930] text-white shadow-lg shadow-[#cd8a4b]/20 border-[rgba(255,255,255,0.1)] hover:from-[#df9e61] hover:to-[#cd8a4b]'
+                    : 'bg-[rgba(255,255,255,0.05)] text-[rgba(255,255,255,0.3)] border-transparent cursor-not-allowed'
                 }`}
               >
                 Upload
-              </button>
-              <button
-                type='button'
-                onClick={() => {
-                  setShowUploadResume(false)
-                  setUploadFile(null)
-                  setUploadFileName('')
-                  setUploadTitle('')
-                  setUploadError('')
-                }}
-                className='flex-1 border border-slate-200 text-slate-600 px-4 py-2.5 rounded-xl hover:bg-slate-50 transition cursor-pointer'
-              >
-                Cancel
               </button>
             </div>
           </div>
@@ -449,22 +435,11 @@ const Dashboard = () => {
         href='https://digitalheroesco.com'
         target='_blank'
         rel='noopener noreferrer'
-        className='fixed bottom-6 right-6 z-40 bg-gradient-to-r from-yellow-500 to-amber-500 text-white rounded-full px-5 py-2.5 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2 text-sm font-medium animate-pulse-glow'
+        className='fixed bottom-8 right-8 z-50 bg-[#0a0a1a] border border-[#6fa37a]/50 text-white rounded-full px-6 py-3 shadow-[0_0_25px_rgba(111,163,122,0.4)] hover:shadow-[0_0_35px_rgba(111,163,122,0.6)] hover:scale-105 transition-all duration-300 flex items-center gap-2.5 text-sm font-semibold font-grotesk animate-pulse-glow'
       >
-        <span>Built for Digital Heroes</span>
-        <ExternalLink className='w-4 h-4' />
+        <span className="text-mossamber tracking-wide">Built for Digital Heroes</span>
+        <ExternalLink className='w-4 h-4 text-[#6fa37a]' />
       </a>
-
-      {/* Pulse glow animation */}
-      <style>{`
-        @keyframes pulse-glow {
-          0%, 100% { box-shadow: 0 0 8px 0 rgba(245, 158, 11, 0.4); }
-          50% { box-shadow: 0 0 20px 4px rgba(245, 158, 11, 0.25); }
-        }
-        .animate-pulse-glow {
-          animation: pulse-glow 2.5s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   )
 }

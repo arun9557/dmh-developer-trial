@@ -69,6 +69,21 @@ const sectionConfig = [
 
 const generateId = () => Math.random().toString(36).substring(2, 15) + Date.now().toString(36)
 
+// Input component
+const InputField = ({ label, type = 'text', value, onChange, placeholder, disabled = false }) => (
+  <div className="mb-3">
+    <label className="block text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-1">{label}</label>
+    <input
+      type={type}
+      value={value || ''}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      disabled={disabled}
+      className="tool-input w-full px-3 py-2 text-sm disabled:opacity-50"
+    />
+  </div>
+)
+
 const ResumeBuild = () => {
   const { resumeId } = useParams()
   const navigate = useNavigate()
@@ -370,27 +385,10 @@ const ResumeBuild = () => {
     setActiveSection((prev) => (prev === sectionId ? null : sectionId))
   }, [])
 
-  // Input component
-  const InputField = ({ label, type = 'text', value, onChange, placeholder, disabled = false }) => (
-    <div className="mb-3">
-      <label className="block text-xs font-medium text-slate-500 mb-1">{label}</label>
-      <input
-        type={type}
-        value={value || ''}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        disabled={disabled}
-        className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-800
-                   focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 focus:outline-none
-                   transition-all duration-200 disabled:opacity-50 disabled:bg-slate-50"
-      />
-    </div>
-  )
-
   if (!resumeData) {
     return (
-      <div className="h-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-spin w-8 h-8 border-3 border-yellow-500 border-t-transparent rounded-full" />
+      <div className="h-screen flex items-center justify-center bg-[#0a0a1a] liquid-bg">
+        <div className="animate-spin w-8 h-8 border-3 border-[#6fa37a] border-t-transparent rounded-full" />
       </div>
     )
   }
@@ -407,18 +405,21 @@ const ResumeBuild = () => {
   const renderAccordionSection = (section) => {
     const isOpen = activeSection === section.id
     const Icon = section.icon
+    const isActive = isOpen
 
     return (
-      <div key={section.id} className="border-b border-slate-100 last:border-b-0">
+      <div key={section.id} className="border-b border-[rgba(255,255,255,0.05)] last:border-b-0">
         <button
           onClick={() => toggleSection(section.id)}
-          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-50 cursor-pointer transition-colors duration-200"
+          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[rgba(255,255,255,0.05)] cursor-pointer transition-colors duration-200"
         >
-          <Icon size={18} className="text-slate-500 flex-shrink-0" />
-          <span className="text-sm font-medium text-slate-700 flex-1 text-left">{section.label}</span>
+          <Icon size={18} className="text-[rgba(255,255,255,0.5)] flex-shrink-0" />
+          <span className={`text-sm font-medium flex-1 text-left font-grotesk ${isActive ? 'text-[#6fa37a]' : 'text-white'}`}>
+            {section.label}
+          </span>
           <ChevronDown
             size={16}
-            className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+            className={`text-[rgba(255,255,255,0.5)] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>
         <div
@@ -487,18 +488,18 @@ const ResumeBuild = () => {
 
             {/* Profile Image Upload */}
             <div className="mt-2">
-              <label className="block text-xs font-medium text-slate-500 mb-1">Profile Image</label>
+              <label className="block text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-1">Profile Image</label>
               {resumeData.personal_info?.image ? (
                 <div className="flex items-center gap-3">
                   <img
                     src={resumeData.personal_info.image}
                     alt="Profile"
-                    className="w-16 h-16 rounded-lg object-cover border-2 border-slate-200"
+                    className="w-16 h-16 rounded-lg object-cover border border-[rgba(255,255,255,0.1)]"
                   />
                   <button
                     onClick={() => updatePersonalInfo('image', '')}
-                    className="flex items-center gap-1 px-3 py-1.5 text-xs text-red-500 bg-red-50 rounded-lg
-                               hover:bg-red-100 transition-colors duration-200 cursor-pointer"
+                    className="flex items-center gap-1 px-3 py-1.5 text-xs text-red-400 bg-[rgba(239,68,68,0.1)] rounded-lg
+                               hover:bg-[rgba(239,68,68,0.2)] transition-colors duration-200 cursor-pointer font-grotesk"
                   >
                     <X size={14} />
                     Remove
@@ -510,15 +511,15 @@ const ResumeBuild = () => {
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200
+                  className={`border border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200
                     ${isDragging
-                      ? 'border-yellow-500 bg-yellow-50'
-                      : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                      ? 'border-[#6fa37a] bg-[rgba(111,163,122,0.1)]'
+                      : 'border-[rgba(255,255,255,0.2)] hover:border-[rgba(255,255,255,0.4)] hover:bg-[rgba(255,255,255,0.05)]'
                     }`}
                 >
-                  <ImagePlus size={24} className="mx-auto mb-2 text-slate-400" />
-                  <p className="text-xs text-slate-500">
-                    Drag & drop an image or <span className="text-yellow-600 font-medium">browse</span>
+                  <ImagePlus size={24} className="mx-auto mb-2 text-[rgba(255,255,255,0.5)]" />
+                  <p className="text-xs text-[rgba(255,255,255,0.5)] font-mono">
+                    Drag & drop an image or <span className="text-[#6fa37a] font-medium font-grotesk">browse</span>
                   </p>
                   <input
                     ref={fileInputRef}
@@ -541,11 +542,9 @@ const ResumeBuild = () => {
               onChange={(e) => updateField('professional_summary', e.target.value.slice(0, 500))}
               rows={5}
               placeholder="Write a brief professional summary..."
-              className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-800 resize-none
-                         focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 focus:outline-none
-                         transition-all duration-200"
+              className="tool-input w-full px-3 py-2 text-sm resize-none mb-1"
             />
-            <p className="text-xs text-slate-400 text-right mt-1">
+            <p className="text-xs text-[rgba(255,255,255,0.4)] text-right mt-1 font-mono">
               {(resumeData.professional_summary || '').length}/500
             </p>
           </div>
@@ -557,16 +556,16 @@ const ResumeBuild = () => {
             {(resumeData.experience || []).map((exp) => {
               const isExpanded = expandedExp === exp._id
               return (
-                <div key={exp._id} className="border border-slate-200 rounded-lg overflow-hidden">
+                <div key={exp._id} className="border border-[rgba(255,255,255,0.05)] rounded-lg overflow-hidden">
                   <div
-                    className="flex items-center justify-between px-3 py-2.5 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors duration-200"
+                    className="flex items-center justify-between px-3 py-2.5 bg-[rgba(255,255,255,0.02)] cursor-pointer hover:bg-[rgba(255,255,255,0.05)] transition-colors duration-200"
                     onClick={() => setExpandedExp(isExpanded ? null : exp._id)}
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-700 truncate">
+                      <p className="text-sm font-medium text-white font-grotesk truncate">
                         {exp.position || 'New Position'}
                       </p>
-                      <p className="text-xs text-slate-500 truncate">{exp.company || 'Company'}</p>
+                      <p className="text-xs text-[rgba(255,255,255,0.5)] font-mono truncate">{exp.company || 'Company'}</p>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
                       <button
@@ -574,13 +573,13 @@ const ResumeBuild = () => {
                           e.stopPropagation()
                           deleteExperience(exp._id)
                         }}
-                        className="p-1 text-slate-400 hover:text-red-500 transition-colors duration-200 cursor-pointer"
+                        className="p-1 text-[rgba(255,255,255,0.4)] hover:text-red-400 transition-colors duration-200 cursor-pointer"
                       >
                         <Trash2 size={14} />
                       </button>
                       <ChevronDown
                         size={14}
-                        className={`text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                        className={`text-[rgba(255,255,255,0.5)] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                       />
                     </div>
                   </div>
@@ -617,7 +616,7 @@ const ResumeBuild = () => {
                           disabled={exp.is_current}
                         />
                       </div>
-                      <div className="flex items-center gap-2 mb-3">
+                      <div className="flex items-center gap-2 mb-3 mt-1">
                         <input
                           type="checkbox"
                           id={`current-${exp._id}`}
@@ -628,22 +627,20 @@ const ResumeBuild = () => {
                               updateExperience(exp._id, 'end_date', 'Present')
                             }
                           }}
-                          className="w-4 h-4 rounded border-slate-300 text-yellow-500 focus:ring-yellow-500/40 cursor-pointer"
+                          className="w-4 h-4 rounded border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.05)] text-[#6fa37a] focus:ring-[#6fa37a]/40 cursor-pointer"
                         />
-                        <label htmlFor={`current-${exp._id}`} className="text-xs text-slate-600 cursor-pointer">
+                        <label htmlFor={`current-${exp._id}`} className="text-xs text-[rgba(255,255,255,0.6)] font-mono cursor-pointer">
                           I currently work here
                         </label>
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Description</label>
+                        <label className="block text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-1">Description</label>
                         <textarea
                           value={exp.description || ''}
                           onChange={(e) => updateExperience(exp._id, 'description', e.target.value)}
                           rows={3}
                           placeholder="Describe your responsibilities..."
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-800 resize-none
-                                     focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 focus:outline-none
-                                     transition-all duration-200"
+                          className="tool-input w-full px-3 py-2 text-sm resize-none mb-1"
                         />
                       </div>
                     </div>
@@ -653,9 +650,9 @@ const ResumeBuild = () => {
             })}
             <button
               onClick={addExperience}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-dashed border-slate-200
-                         rounded-lg text-sm text-slate-500 hover:border-yellow-500 hover:text-yellow-600
-                         hover:bg-yellow-50/50 transition-all duration-200 cursor-pointer active:scale-95"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-dashed border-[rgba(255,255,255,0.2)]
+                         rounded-lg text-sm text-[rgba(255,255,255,0.6)] font-grotesk hover:border-[#6fa37a] hover:text-[#6fa37a]
+                         hover:bg-[rgba(111,163,122,0.1)] transition-all duration-200 cursor-pointer active:scale-95"
             >
               <Plus size={16} />
               Add Experience
@@ -669,16 +666,16 @@ const ResumeBuild = () => {
             {(resumeData.education || []).map((edu) => {
               const isExpanded = expandedEdu === edu._id
               return (
-                <div key={edu._id} className="border border-slate-200 rounded-lg overflow-hidden">
+                <div key={edu._id} className="border border-[rgba(255,255,255,0.05)] rounded-lg overflow-hidden">
                   <div
-                    className="flex items-center justify-between px-3 py-2.5 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors duration-200"
+                    className="flex items-center justify-between px-3 py-2.5 bg-[rgba(255,255,255,0.02)] cursor-pointer hover:bg-[rgba(255,255,255,0.05)] transition-colors duration-200"
                     onClick={() => setExpandedEdu(isExpanded ? null : edu._id)}
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-700 truncate">
+                      <p className="text-sm font-medium text-white font-grotesk truncate">
                         {edu.degree || 'New Degree'} {edu.field ? `in ${edu.field}` : ''}
                       </p>
-                      <p className="text-xs text-slate-500 truncate">{edu.institution || 'Institution'}</p>
+                      <p className="text-xs text-[rgba(255,255,255,0.5)] font-mono truncate">{edu.institution || 'Institution'}</p>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
                       <button
@@ -686,13 +683,13 @@ const ResumeBuild = () => {
                           e.stopPropagation()
                           deleteEducation(edu._id)
                         }}
-                        className="p-1 text-slate-400 hover:text-red-500 transition-colors duration-200 cursor-pointer"
+                        className="p-1 text-[rgba(255,255,255,0.4)] hover:text-red-400 transition-colors duration-200 cursor-pointer"
                       >
                         <Trash2 size={14} />
                       </button>
                       <ChevronDown
                         size={14}
-                        className={`text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                        className={`text-[rgba(255,255,255,0.5)] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                       />
                     </div>
                   </div>
@@ -741,9 +738,9 @@ const ResumeBuild = () => {
             })}
             <button
               onClick={addEducation}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-dashed border-slate-200
-                         rounded-lg text-sm text-slate-500 hover:border-yellow-500 hover:text-yellow-600
-                         hover:bg-yellow-50/50 transition-all duration-200 cursor-pointer active:scale-95"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-dashed border-[rgba(255,255,255,0.2)]
+                         rounded-lg text-sm text-[rgba(255,255,255,0.6)] font-grotesk hover:border-[#6fa37a] hover:text-[#6fa37a]
+                         hover:bg-[rgba(111,163,122,0.1)] transition-all duration-200 cursor-pointer active:scale-95"
             >
               <Plus size={16} />
               Add Education
@@ -757,16 +754,16 @@ const ResumeBuild = () => {
             {(resumeData.project || []).map((proj) => {
               const isExpanded = expandedProj === proj._id
               return (
-                <div key={proj._id} className="border border-slate-200 rounded-lg overflow-hidden">
+                <div key={proj._id} className="border border-[rgba(255,255,255,0.05)] rounded-lg overflow-hidden">
                   <div
-                    className="flex items-center justify-between px-3 py-2.5 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors duration-200"
+                    className="flex items-center justify-between px-3 py-2.5 bg-[rgba(255,255,255,0.02)] cursor-pointer hover:bg-[rgba(255,255,255,0.05)] transition-colors duration-200"
                     onClick={() => setExpandedProj(isExpanded ? null : proj._id)}
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-700 truncate">
+                      <p className="text-sm font-medium text-white font-grotesk truncate">
                         {proj.name || 'New Project'}
                       </p>
-                      <p className="text-xs text-slate-500 truncate">{proj.type || 'Project Type'}</p>
+                      <p className="text-xs text-[rgba(255,255,255,0.5)] font-mono truncate">{proj.type || 'Project Type'}</p>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
                       <button
@@ -774,13 +771,13 @@ const ResumeBuild = () => {
                           e.stopPropagation()
                           deleteProject(proj._id)
                         }}
-                        className="p-1 text-slate-400 hover:text-red-500 transition-colors duration-200 cursor-pointer"
+                        className="p-1 text-[rgba(255,255,255,0.4)] hover:text-red-400 transition-colors duration-200 cursor-pointer"
                       >
                         <Trash2 size={14} />
                       </button>
                       <ChevronDown
                         size={14}
-                        className={`text-slate-400 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                        className={`text-[rgba(255,255,255,0.5)] transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                       />
                     </div>
                   </div>
@@ -803,15 +800,13 @@ const ResumeBuild = () => {
                         placeholder="Web Application"
                       />
                       <div>
-                        <label className="block text-xs font-medium text-slate-500 mb-1">Description</label>
+                        <label className="block text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-1">Description</label>
                         <textarea
                           value={proj.description || ''}
                           onChange={(e) => updateProject(proj._id, 'description', e.target.value)}
                           rows={3}
                           placeholder="Describe your project..."
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-800 resize-none
-                                     focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 focus:outline-none
-                                     transition-all duration-200"
+                          className="tool-input w-full px-3 py-2 text-sm resize-none mb-1"
                         />
                       </div>
                     </div>
@@ -821,9 +816,9 @@ const ResumeBuild = () => {
             })}
             <button
               onClick={addProject}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-dashed border-slate-200
-                         rounded-lg text-sm text-slate-500 hover:border-yellow-500 hover:text-yellow-600
-                         hover:bg-yellow-50/50 transition-all duration-200 cursor-pointer active:scale-95"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-dashed border-[rgba(255,255,255,0.2)]
+                         rounded-lg text-sm text-[rgba(255,255,255,0.6)] font-grotesk hover:border-[#6fa37a] hover:text-[#6fa37a]
+                         hover:bg-[rgba(111,163,122,0.1)] transition-all duration-200 cursor-pointer active:scale-95"
             >
               <Plus size={16} />
               Add Project
@@ -841,14 +836,12 @@ const ResumeBuild = () => {
                 onChange={(e) => setSkillInput(e.target.value)}
                 onKeyDown={handleSkillKeyDown}
                 placeholder="Type a skill and press Enter"
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm text-slate-800
-                           focus:ring-2 focus:ring-yellow-500/40 focus:border-yellow-500 focus:outline-none
-                           transition-all duration-200"
+                className="tool-input w-full px-3 py-2 text-sm"
               />
               {skillInput.trim() && (
                 <button
                   onClick={() => addSkill(skillInput)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-yellow-500 hover:text-yellow-600 cursor-pointer"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[#6fa37a] hover:text-[#86b696] cursor-pointer"
                 >
                   <Plus size={16} />
                 </button>
@@ -858,13 +851,13 @@ const ResumeBuild = () => {
               {(resumeData.skills || []).map((skill, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-medium
-                             rounded-full hover:bg-slate-200 transition-colors duration-200 group"
+                  className="inline-flex items-center gap-1 px-3 py-1.5 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] text-white text-xs font-mono
+                             rounded-full hover:bg-[rgba(255,255,255,0.1)] transition-colors duration-200 group"
                 >
                   {skill}
                   <button
                     onClick={() => removeSkill(index)}
-                    className="p-0.5 text-slate-400 hover:text-red-500 transition-colors duration-200 cursor-pointer
+                    className="p-0.5 text-[rgba(255,255,255,0.4)] hover:text-red-400 transition-colors duration-200 cursor-pointer
                                opacity-70 group-hover:opacity-100"
                   >
                     <X size={12} />
@@ -872,7 +865,7 @@ const ResumeBuild = () => {
                 </span>
               ))}
               {resumeData.skills?.length === 0 && (
-                <p className="text-xs text-slate-400 italic">No skills added yet</p>
+                <p className="text-xs text-[rgba(255,255,255,0.4)] italic font-mono">No skills added yet</p>
               )}
             </div>
           </div>
@@ -885,13 +878,13 @@ const ResumeBuild = () => {
 
   // Editor Sidebar Component
   const editorSidebar = (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-transparent">
       {/* Sidebar scrollable content */}
       <div
         className="flex-1 overflow-y-auto"
         style={{
           scrollbarWidth: 'thin',
-          scrollbarColor: '#cbd5e1 transparent'
+          scrollbarColor: 'rgba(255,255,255,0.2) transparent'
         }}
       >
         <div className="py-2">
@@ -902,8 +895,8 @@ const ResumeBuild = () => {
         <div className="px-4 pb-6 pt-2">
           <button
             onClick={clearAll}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-500 text-sm
-                       font-medium rounded-lg border border-red-200 hover:bg-red-100 hover:text-red-600
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[rgba(239,68,68,0.1)] text-red-400 text-sm
+                       font-grotesk font-medium rounded-lg border border-[rgba(239,68,68,0.2)] hover:bg-[rgba(239,68,68,0.2)]
                        transition-all duration-200 cursor-pointer active:scale-95"
           >
             <Trash2 size={16} />
@@ -916,21 +909,21 @@ const ResumeBuild = () => {
 
   // Preview Panel Component
   const previewPanel = (
-    <div className="h-full flex flex-col bg-slate-50/80">
+    <div className="h-full flex flex-col bg-[#0a0a1a]/50 glass no-print">
       {/* Preview Controls Bar */}
-      <div className="flex-shrink-0 bg-white border-b border-slate-200 px-4 py-3">
+      <div className="flex-shrink-0 glass border-b border-[rgba(255,255,255,0.1)] px-4 py-3">
         {/* Template selector */}
         <div className="mb-3">
-          <p className="text-xs font-medium text-slate-500 mb-2">Template</p>
+          <p className="text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-2">Template</p>
           <div className="grid grid-cols-4 gap-2">
             {templateOptions.map((tmpl) => (
               <button
                 key={tmpl.key}
                 onClick={() => setActiveTemplate(tmpl.key)}
-                className={`px-2 py-2 text-xs font-medium rounded-lg border-2 transition-all duration-200 cursor-pointer active:scale-95
+                className={`px-2 py-2 text-xs font-medium font-grotesk rounded-lg border transition-all duration-200 cursor-pointer active:scale-95
                   ${activeTemplate === tmpl.key
-                    ? 'border-yellow-500 bg-yellow-50 text-yellow-700'
-                    : 'border-slate-200 text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                    ? 'border-[#6fa37a] bg-[rgba(111,163,122,0.1)] text-[#6fa37a]'
+                    : 'border-[rgba(255,255,255,0.1)] text-[rgba(255,255,255,0.7)] hover:border-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.05)]'
                   }`}
               >
                 {tmpl.label}
@@ -943,27 +936,27 @@ const ResumeBuild = () => {
         <div className="flex items-end gap-4">
           {/* Colors */}
           <div className="flex-1">
-            <p className="text-xs font-medium text-slate-500 mb-2">Accent Color</p>
+            <p className="text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-2">Accent Color</p>
             <div className="flex items-center gap-2">
               {presetColors.map((color) => (
                 <button
                   key={color.hex}
                   onClick={() => setAccentColor(color.hex)}
                   title={color.name}
-                  className={`w-7 h-7 rounded-full border-2 transition-all duration-200 cursor-pointer flex items-center justify-center
+                  className={`w-7 h-7 rounded-full border transition-all duration-200 cursor-pointer flex items-center justify-center
                     ${accentColor === color.hex
-                      ? 'border-slate-800 scale-110'
+                      ? 'border-white scale-110'
                       : 'border-transparent hover:scale-110'
                     }`}
                   style={{ backgroundColor: color.hex }}
                 >
-                  {accentColor === color.hex && <Check size={12} className="text-white" />}
+                  {accentColor === color.hex && <Check size={12} className="text-white drop-shadow-md" />}
                 </button>
               ))}
               <label className="relative cursor-pointer" title="Custom color">
                 <div
-                  className={`w-7 h-7 rounded-full border-2 border-dashed border-slate-300 flex items-center justify-center
-                              hover:border-slate-400 transition-all duration-200 overflow-hidden`}
+                  className={`w-7 h-7 rounded-full border border-dashed border-[rgba(255,255,255,0.2)] flex items-center justify-center
+                              hover:border-[rgba(255,255,255,0.4)] transition-all duration-200 overflow-hidden`}
                 >
                   <div className="w-full h-full bg-gradient-to-br from-red-400 via-green-400 to-blue-400 opacity-60" />
                 </div>
@@ -979,14 +972,14 @@ const ResumeBuild = () => {
 
           {/* Zoom */}
           <div className="flex-shrink-0">
-            <p className="text-xs font-medium text-slate-500 mb-2">Zoom: {zoomLevel}%</p>
+            <p className="text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-2">Zoom: {zoomLevel}%</p>
             <input
               type="range"
               min={40}
               max={120}
               value={zoomLevel}
               onChange={(e) => setZoomLevel(Number(e.target.value))}
-              className="w-28 h-1.5 accent-yellow-500 cursor-pointer"
+              className="w-28 h-1.5 accent-[#6fa37a] cursor-pointer"
             />
           </div>
         </div>
@@ -997,7 +990,7 @@ const ResumeBuild = () => {
         className="flex-1 overflow-auto p-6"
         style={{
           scrollbarWidth: 'thin',
-          scrollbarColor: '#cbd5e1 transparent'
+          scrollbarColor: 'rgba(255,255,255,0.2) transparent'
         }}
       >
         <div className="flex justify-center">
@@ -1010,7 +1003,7 @@ const ResumeBuild = () => {
             }}
           >
             <div
-              className="bg-white shadow-xl rounded-sm"
+              className="bg-white text-black shadow-2xl rounded-sm print-area"
               style={{
                 width: '794px',
                 minHeight: '1123px'
@@ -1026,13 +1019,13 @@ const ResumeBuild = () => {
   )
 
   return (
-    <div className="h-screen flex flex-col bg-slate-50 print:bg-white">
+    <div className="h-screen flex flex-col bg-[#0a0a1a] liquid-bg print:bg-white">
       {/* ===== TOP TOOLBAR ===== */}
-      <div className="flex-shrink-0 bg-white border-b border-slate-200 shadow-sm h-14 flex items-center px-4 gap-4 print:hidden z-20">
+      <div className="flex-shrink-0 glass border-b border-[rgba(255,255,255,0.1)] h-14 flex items-center px-4 gap-4 print:hidden z-20 no-print">
         {/* Left: Back button */}
         <button
           onClick={() => navigate('/app/dashboard')}
-          className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors duration-200 cursor-pointer flex-shrink-0"
+          className="flex items-center gap-2 text-[rgba(255,255,255,0.7)] hover:text-white font-grotesk transition-colors duration-200 cursor-pointer flex-shrink-0"
         >
           <ArrowLeft size={18} />
           <span className="text-sm font-medium hidden sm:inline">Dashboard</span>
@@ -1050,13 +1043,13 @@ const ResumeBuild = () => {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') setIsEditingTitle(false)
               }}
-              className="text-sm font-semibold text-slate-800 text-center bg-transparent border-b-2 border-yellow-500
+              className="text-sm font-semibold font-grotesk text-white text-center bg-transparent border-b-2 border-[#6fa37a]
                          focus:outline-none px-2 py-1 max-w-xs w-full"
             />
           ) : (
             <button
               onClick={() => setIsEditingTitle(true)}
-              className="text-sm font-semibold text-slate-800 hover:text-yellow-600 transition-colors duration-200
+              className="text-sm font-semibold font-grotesk text-white hover:text-[#6fa37a] transition-colors duration-200
                          cursor-pointer truncate max-w-xs px-2 py-1"
               title="Click to edit title"
             >
@@ -1069,8 +1062,8 @@ const ResumeBuild = () => {
         <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={downloadJSON}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100
-                       rounded-lg hover:bg-slate-200 transition-all duration-200 cursor-pointer active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[rgba(255,255,255,0.8)] bg-[rgba(255,255,255,0.05)]
+                       font-grotesk rounded-lg hover:bg-[rgba(255,255,255,0.1)] transition-all duration-200 cursor-pointer active:scale-95"
             title="Download JSON"
           >
             <Download size={14} />
@@ -1080,15 +1073,15 @@ const ResumeBuild = () => {
           <div className="relative">
             <button
               onClick={shareLink}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100
-                         rounded-lg hover:bg-slate-200 transition-all duration-200 cursor-pointer active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-[rgba(255,255,255,0.8)] bg-[rgba(255,255,255,0.05)]
+                         font-grotesk rounded-lg hover:bg-[rgba(255,255,255,0.1)] transition-all duration-200 cursor-pointer active:scale-95"
               title="Share Link"
             >
               <Share2 size={14} />
               <span className="hidden md:inline">Share Link</span>
             </button>
             {shareToast && (
-              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-[#1a1a2e] border border-[rgba(255,255,255,0.1)] text-white font-mono text-xs
                               px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg animate-fade-in z-50">
                 <Check size={12} className="inline mr-1" />
                 Copied!
@@ -1098,8 +1091,8 @@ const ResumeBuild = () => {
 
           <button
             onClick={handlePrint}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-yellow-500
-                       rounded-lg hover:bg-yellow-600 transition-all duration-200 cursor-pointer active:scale-95"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-[#6fa37a] to-[#3f6b54] text-white hover:from-[#86b696] hover:to-[#6fa37a] border border-[rgba(255,255,255,0.1)]
+                       font-grotesk rounded-lg transition-all duration-200 cursor-pointer active:scale-95"
             title="Print / PDF"
           >
             <Printer size={14} />
@@ -1113,7 +1106,7 @@ const ResumeBuild = () => {
         {/* Desktop Layout */}
         {/* Left: Editor Sidebar */}
         <div
-          className={`w-[420px] border-r border-slate-200 flex-shrink-0 print:hidden
+          className={`w-[420px] border-r border-[rgba(255,255,255,0.05)] bg-[#0a0a1a]/80 glass flex-shrink-0 print:hidden no-print
                       hidden md:block ${isMobilePreview ? 'md:block' : 'md:block'}`}
         >
           {editorSidebar}
@@ -1129,11 +1122,11 @@ const ResumeBuild = () => {
       </div>
 
       {/* ===== MOBILE TOGGLE BUTTON ===== */}
-      <div className="md:hidden print:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30">
+      <div className="md:hidden print:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-30 no-print">
         <button
           onClick={() => setIsMobilePreview((prev) => !prev)}
-          className="flex items-center gap-2 px-5 py-3 bg-yellow-500 text-white font-medium text-sm
-                     rounded-full shadow-lg hover:bg-yellow-600 transition-all duration-200 cursor-pointer
+          className="flex items-center gap-2 px-5 py-3 glass border border-[#6fa37a]/30 text-[#6fa37a] hover:bg-[#6fa37a]/10 font-medium font-grotesk text-sm
+                     rounded-full shadow-lg transition-all duration-200 cursor-pointer
                      active:scale-95"
         >
           {isMobilePreview ? (
@@ -1166,6 +1159,9 @@ const ResumeBuild = () => {
             width: 100%;
             transform: none !important;
             box-shadow: none !important;
+          }
+          .no-print {
+            display: none !important;
           }
         }
         @keyframes fade-in {
