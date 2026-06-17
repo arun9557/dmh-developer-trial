@@ -909,9 +909,9 @@ const ResumeBuild = () => {
 
   // Preview Panel Component
   const previewPanel = (
-    <div className="h-full flex flex-col bg-[#0a0a1a]/50 glass no-print">
+    <div className="h-full flex flex-col bg-[#0a0a1a]/50 glass">
       {/* Preview Controls Bar */}
-      <div className="flex-shrink-0 glass border-b border-[rgba(255,255,255,0.1)] px-4 py-3">
+      <div className="flex-shrink-0 glass border-b border-[rgba(255,255,255,0.1)] px-4 py-3 no-print">
         {/* Template selector */}
         <div className="mb-3">
           <p className="text-xs font-medium text-[rgba(255,255,255,0.6)] font-mono mb-2">Template</p>
@@ -1143,27 +1143,8 @@ const ResumeBuild = () => {
         </button>
       </div>
 
-      {/* ===== PRINT STYLES ===== */}
+      {/* ===== STYLES ===== */}
       <style>{`
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          #resume-print-area, #resume-print-area * {
-            visibility: visible;
-          }
-          #resume-print-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            transform: none !important;
-            box-shadow: none !important;
-          }
-          .no-print {
-            display: none !important;
-          }
-        }
         @keyframes fade-in {
           from { opacity: 0; transform: translateX(-50%) translateY(-4px); }
           to { opacity: 1; transform: translateX(-50%) translateY(0); }
