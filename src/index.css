@@ -217,12 +217,7 @@ body::before {
     transform: none !important;
     box-shadow: none !important;
     border: none !important;
-    overflow: visible !important;
     background: white !important;
-  }
-
-  .print-area * {
-    overflow: visible !important;
   }
 
   * {
