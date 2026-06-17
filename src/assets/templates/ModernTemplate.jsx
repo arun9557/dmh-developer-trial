@@ -165,13 +165,13 @@ const ModernTemplate = ({ data, accentColor }) => {
 
 							<div className="flex flex-wrap gap-2">
 								{data.skills.map((skill, index) => (
-									<span
+									<div
 										key={index}
-										className="px-3 py-1 text-sm text-white rounded-full"
+										className="px-3 py-1.5 text-sm text-white rounded-md inline-block leading-relaxed"
 										style={{ backgroundColor: accentColor }}
 									>
 										{skill}
-									</span>
+									</div>
 								))}
 							</div>
 						</section>
