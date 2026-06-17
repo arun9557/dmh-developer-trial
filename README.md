@@ -1,6 +1,6 @@
 # ⚡ ResumeAI — The Ultimate Resume Builder
 
-> Handcrafted by **Arun Shekhar** (b24bs2044@iitj.ac.in) for the **Digital Heroes** developer trial.
+> Handcrafted by **Arun Pratap Singh** (b24bs2044@iitj.ac.in) for the **Digital Heroes** developer trial.
 
 ## 🚀 What's the hype?
 
@@ -44,7 +44,7 @@ npm run build
 ## 🌐 Links & Shoutouts
 
 - **Target Vibe**: Built specifically following the elite [Digital Heroes](https://digitalheroesco.com) design philosophy.
-- **The Dev**: Arun Shekhar | b24bs2044@iitj.ac.in
+- **The Dev**: Arun Pratap Singh | b24bs2044@iitj.ac.in
 
 ---
 
