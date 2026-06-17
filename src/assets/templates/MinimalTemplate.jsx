@@ -12,12 +12,20 @@ const MinimalTemplate = ({ data, accentColor }) => {
     return (
         <div className="max-w-4xl mx-auto p-8 bg-white text-gray-900 font-light">
             {/* Header */}
-            <header className="mb-10">
-                <h1 className="text-4xl font-thin mb-4 tracking-wide">
-                    {data.personal_info?.full_name || "Your Name"}
-                </h1>
+            <header className="mb-10 flex flex-col sm:flex-row sm:items-center gap-6">
+                {data.personal_info?.image && (
+                    <img 
+                        src={data.personal_info.image} 
+                        alt="Profile" 
+                        className="w-24 h-24 rounded-full object-cover shrink-0 grayscale hover:grayscale-0 transition-all duration-300 shadow-sm" 
+                    />
+                )}
+                <div>
+                    <h1 className="text-4xl font-thin mb-4 tracking-wide">
+                        {data.personal_info?.full_name || "Your Name"}
+                    </h1>
 
-                <div className="flex flex-wrap gap-6 text-sm text-gray-600">
+                    <div className="flex flex-wrap gap-6 text-sm text-gray-600">
                     {data.personal_info?.email && <span>{data.personal_info.email}</span>}
                     {data.personal_info?.phone && <span>{data.personal_info.phone}</span>}
                     {data.personal_info?.location && <span>{data.personal_info.location}</span>}
@@ -27,6 +35,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
                     {data.personal_info?.website && (
                         <span className="break-all">{data.personal_info.website}</span>
                     )}
+                    </div>
                 </div>
             </header>
 

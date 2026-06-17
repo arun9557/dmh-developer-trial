@@ -13,12 +13,20 @@ const ModernTemplate = ({ data, accentColor }) => {
 	return (
 		<div className="max-w-4xl mx-auto bg-white text-gray-800">
 			{/* Header */}
-			<header className="p-8 text-white" style={{ backgroundColor: accentColor }}>
-				<h1 className="text-4xl font-light mb-3">
-					{data.personal_info?.full_name || "Your Name"}
-				</h1>
+			<header className="p-8 text-white flex flex-col md:flex-row md:items-center gap-6" style={{ backgroundColor: accentColor }}>
+				{data.personal_info?.image && (
+					<img 
+						src={data.personal_info.image} 
+						alt="Profile" 
+						className="w-28 h-28 rounded-full object-cover border-4 border-white/40 shadow-sm shrink-0" 
+					/>
+				)}
+				<div className="flex-1">
+					<h1 className="text-4xl font-light mb-3">
+						{data.personal_info?.full_name || "Your Name"}
+					</h1>
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm ">
+					<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm ">
 					{data.personal_info?.email && (
 						<div className="flex items-center gap-2">
 							<Mail className="size-4" />
@@ -49,6 +57,7 @@ const ModernTemplate = ({ data, accentColor }) => {
 							<span className="break-all text-xs">{data.personal_info.website.split("https://")[1] ? data.personal_info.website.split("https://")[1] : data.personal_info.website}</span>
 						</a>
 					)}
+					</div>
 				</div>
 			</header>
 

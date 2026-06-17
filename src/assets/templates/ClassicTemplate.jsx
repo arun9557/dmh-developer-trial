@@ -13,7 +13,15 @@ const ClassicTemplate = ({ data, accentColor }) => {
     return (
         <div className="max-w-4xl mx-auto p-8 bg-white text-gray-800 leading-relaxed">
             {/* Header */}
-            <header className="text-center mb-8 pb-6 border-b-2" style={{ borderColor: accentColor }}>
+            <header className="flex flex-col items-center text-center mb-8 pb-6 border-b-2" style={{ borderColor: accentColor }}>
+                {data.personal_info?.image && (
+                    <img 
+                        src={data.personal_info.image} 
+                        alt="Profile" 
+                        className="w-24 h-24 rounded-full object-cover mb-4 border-2 shadow-sm" 
+                        style={{ borderColor: accentColor }}
+                    />
+                )}
                 <h1 className="text-3xl font-bold mb-2" style={{ color: accentColor }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
